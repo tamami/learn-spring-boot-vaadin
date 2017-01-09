@@ -9,6 +9,9 @@ import com.vaadin.ui.*;
 import lab.aikibo.component.Greeter;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 
 /**
  * Created by tamami on 04/01/17.
@@ -60,6 +63,8 @@ public class MyFirstVaadin extends UI {
 
     public void getNip(String nip) {
         UserAgent userAgent = new UserAgent();
+        LinkedList<String> label = new LinkedList<>();
+        LinkedList<String> value = new LinkedList<>();
 
         try {
             userAgent.visit("http://www.bkn.go.id/profil-pns");
@@ -69,23 +74,33 @@ public class MyFirstVaadin extends UI {
             userAgent.sendPOST("http://www.bkn.go.id/profil-pns", "nip=" + nip);
 
             Elements el = userAgent.doc.findEvery("<span>");
-            int i=1;
             for(Element data : el) {
-                String label ="";
-                String value ="";
-                Object newItem = table.addItem();
-                Item row = table.getItem(newItem);
+
                 if(data.getAt("class").equals("label")) {
-                    label = data.innerHTML();
+                    label.add(data.innerHTML());
                 }
                 if(data.getAt("class").equals("value")) {
-                    value = data.innerHTML().substring(2);
+                    value.add(data.innerHTML().substring(2));
                 }
-                table.addItem(new Object[]{label,value},i++);
             }
+
         } catch(NotFound e) {}
           catch(SearchException e) { e.printStackTrace(); }
           catch(ResponseException e) { e.printStackTrace(); }
+
+        System.out.println(label.size());
+        System.out.println(value.size());
+
+        for(int j=0; j<label.size(); j++) {
+            /*
+            Object newItem = table.addItem();
+            Item row = table.getItem(newItem);
+            row.getItemProperty("LABEL").setValue(label.get(j));
+            row.getItemProperty("KETERANGAN").setValue(value.get(j));
+            */
+            table.addItem(new Object[]{label.get(j), value.get(j)}, j+1);
+            System.out.println(label.get(j));
+        }
 
         table.setPageLength(table.size());
     }
