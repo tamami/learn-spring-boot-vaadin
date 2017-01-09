@@ -55,6 +55,14 @@
 		</dependencies>
 	</dependencyManagement>
 
+    <repositories>
+        <repository>
+            <id>jaunt.local</id>
+            <name>Jaunt Local Server</name>
+            <url>file:${project.basedir}/repo</url>
+        </repository>
+    </repositories>
+
 	<build>
 		<plugins>
 			<plugin>
